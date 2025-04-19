@@ -1,0 +1,113 @@
+// styles/components/PokemonList.scss
+
+.pokemon-list {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  
+    &__container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+  
+    &__row {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background-color: white;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.2s;
+      cursor: pointer;
+  
+      &:hover {
+        background-color: #f9f9f9;
+      }
+  
+      &-id {
+        width: 60px;
+        color: #777;
+        font-weight: 500;
+      }
+  
+      &-image {
+        width: 50px;
+        height: 50px;
+        margin-right: 1rem;
+      }
+  
+      &-name {
+        flex: 1;
+        font-weight: 500;
+        text-transform: capitalize;
+      }
+  
+      &-types {
+        display: flex;
+        gap: 0.5rem;
+        margin-right: 1rem;
+      }
+  
+      &-type {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        text-transform: capitalize;
+        color: white;
+      }
+    }
+  
+    &__empty {
+      text-align: center;
+      padding: 3rem 0;
+      color: #666;
+      font-size: 1.2rem;
+    }
+  
+    &__loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem 0;
+      
+      &-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: #e3350d;
+        animation: spin 1s ease-in-out infinite;
+      }
+    }
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  // Mobile responsiveness
+  @media (max-width: 768px) {
+    .pokemon-list {
+      padding: 1rem;
+      
+      &__row {
+        flex-wrap: wrap;
+        
+        &-id {
+          width: 40px;
+        }
+        
+        &-types {
+          width: 100%;
+          margin-top: 0.5rem;
+          margin-left: 90px;
+        }
+      }
+    }
+  }
