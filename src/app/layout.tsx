@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
 import './styles/globals.scss';
 
 export const metadata: Metadata = {

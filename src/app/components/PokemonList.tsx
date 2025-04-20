@@ -1,4 +1,5 @@
 import { ListGroup } from 'react-bootstrap';
+import LoadingSpinner from './LoaddingSpinner';
 import { Pokemon } from '../types';
 import '../styles/components/PokemonList.scss';
 
@@ -9,7 +10,7 @@ interface PokemonListProps {
 
 const PokemonList = ({ pokemon, loading }: PokemonListProps) => {
   if (loading) {
-    return <div className="loading-spinner">Loading Pokemon...</div>;
+    return <LoadingSpinner message="Loading Pokemon..." />;
   }
   
   if (pokemon.length === 0) {
@@ -19,18 +20,18 @@ const PokemonList = ({ pokemon, loading }: PokemonListProps) => {
   return (
     <ListGroup className="pokemon-list">
       {pokemon.map((p) => (
-        <ListGroup.Item key={p.id} className="pokemon-list-item">
-          <div className="pokemon-image">
+        <ListGroup.Item key={p.id} className="pokemon-list-item d-flex justify-content-around align-items-center">
+          <div className="pokemon-image ">
             <img 
               src={p.sprites?.front_default || `/images/pokemon-placeholder.png`} 
               alt={p.name} 
             />
           </div>
-          <div className="pokemon-info">
-            <h5>{p.name.charAt(0).toUpperCase() + p.name.slice(1)}</h5>
+          <div className="pokemon-info ">
+            <h5 className='text-center'>{p.name.charAt(0).toUpperCase() + p.name.slice(1)}</h5>
             <div className="pokemon-types">
               {p.types?.map((type, index) => (
-                <span key={index} className={`type-badge type-${type.type.name}`}>
+                <span key={index} className={`type-badge m-2 type-${type.type.name}`}>
                   {type.type.name}
                 </span>
               ))}

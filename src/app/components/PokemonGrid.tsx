@@ -1,7 +1,8 @@
-import { Row, Col } from 'react-bootstrap';
 import PokemonCard from './PokemonCard';
+import LoadingSpinner from './LoaddingSpinner';
 import { Pokemon } from '../types';
 import '../styles/components/PokemonGrid.scss';
+import { Col, Row } from 'react-bootstrap';
 
 interface PokemonGridProps {
   pokemon: Pokemon[];
@@ -10,7 +11,7 @@ interface PokemonGridProps {
 
 const PokemonGrid = ({ pokemon, loading }: PokemonGridProps) => {
   if (loading) {
-    return <div className="loading-spinner">Loading Pokemon...</div>;
+    return <LoadingSpinner message="Loading Pokemon..." />;
   }
   
   if (pokemon.length === 0) {

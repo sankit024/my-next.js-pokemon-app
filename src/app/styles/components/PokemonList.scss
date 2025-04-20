@@ -1,10 +1,8 @@
 // styles/components/PokemonList.scss
-
 .pokemon-list {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1.5rem;
   
     &__container {
       display: flex;
@@ -91,7 +89,6 @@
     }
   }
   
-  // Mobile responsiveness
   @media (max-width: 768px) {
     .pokemon-list {
       padding: 1rem;

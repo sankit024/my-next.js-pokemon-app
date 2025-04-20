@@ -1,142 +1,182 @@
-// styles/components/PokemonCard.scss
-
 .pokemon-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+  background-color: white;
+  height: 100%;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  &__header {
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f5f5;
+    
+    &-id {
+      font-weight: bold;
+      color: #777;
+    }
+    
+    &-name {
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+  }
+  
+  &__image-container {
+    background-color: #f9f9f9;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    
+    img {
+      max-width: 100%;
+      max-height: 150px;
+      transition: transform 0.3s;
+      object-fit: contain;
+    }
+    
+    &:hover img {
+      transform: scale(1.1);
+    }
+  }
+  
+  &__content {
+    padding: 1rem;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-    background-color: white;
-    height: 100%;
-    cursor: pointer;
+  }
+  
+  &__types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    // margin-bottom: 0.75rem;
+  }
+  
+  &__stats {
+    margin-top: auto;
     
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    &-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
+      font-size: 0.9rem;
+    }
+    
+    &-label {
+      color: #666;
+    }
+    
+    &-value {
+      font-weight: 500;
+    }
+  }
+  
+  .card-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: capitalize;
+  }
+  
+  .card-img-top {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    height: 180px;
+    object-fit: contain;
+  }
+  
+  .pokemon-types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+// For React Bootstrap Cards
+.card-body {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.type-badge, .pokemon-card__types-type {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  color: white;
+}
+
+/* Pokemon type colors - support both naming conventions */
+.type-normal, .type--normal { background-color: #A8A77A; }
+.type-fire, .type--fire { background-color: #EE8130; }
+.type-water, .type--water { background-color: #6390F0; }
+.type-electric, .type--electric { background-color: #F7D02C; }
+.type-grass, .type--grass { background-color: #7AC74C; }
+.type-ice, .type--ice { background-color: #96D9D6; }
+.type-fighting, .type--fighting { background-color: #C22E28; }
+.type-poison, .type--poison { background-color: #A33EA1; }
+.type-ground, .type--ground { background-color: #E2BF65; }
+.type-flying, .type--flying { background-color: #A98FF3; }
+.type-psychic, .type--psychic { background-color: #F95587; }
+.type-bug, .type--bug { background-color: #A6B91A; }
+.type-rock, .type--rock { background-color: #B6A136; }
+.type-ghost, .type--ghost { background-color: #735797; }
+.type-dragon, .type--dragon { background-color: #6F35FC; }
+.type-dark, .type--dark { background-color: #705746; }
+.type-steel, .type--steel { background-color: #B7B7CE; }
+.type-fairy, .type--fairy { background-color: #D685AD; }
+
+// Mobile responsiveness
+@media (max-width: 480px) {
+  .pokemon-card {
+    &__image-container {
+      height: 140px;
+      
+      img {
+        max-height: 110px;
+      }
     }
     
     &__header {
-      padding: 0.5rem 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #f5f5f5;
-      
-      &-id {
-        font-weight: bold;
-        color: #777;
-      }
-      
       &-name {
-        font-weight: 600;
-        text-transform: capitalize;
-      }
-    }
-    
-    &__image-container {
-      background-color: #f9f9f9;
-      height: 180px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
-      
-      img {
-        max-width: 100%;
-        max-height: 150px;
-        transition: transform 0.3s;
-      }
-      
-      &:hover img {
-        transform: scale(1.1);
-      }
-    }
-    
-    &__content {
-      padding: 1rem;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    &__types {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
-      
-      &-type {
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        text-transform: capitalize;
-        color: white;
+        font-size: 0.9rem;
       }
     }
     
     &__stats {
-      margin-top: auto;
-      
       &-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.25rem;
-        font-size: 0.9rem;
-      }
-      
-      &-label {
-        color: #666;
-      }
-      
-      &-value {
-        font-weight: 500;
+        font-size: 0.8rem;
       }
     }
-  }
-  
-  // Type colors
-  .type {
-    &--normal { background-color: #A8A77A; }
-    &--fire { background-color: #EE8130; }
-    &--water { background-color: #6390F0; }
-    &--electric { background-color: #F7D02C; }
-    &--grass { background-color: #7AC74C; }
-    &--ice { background-color: #96D9D6; }
-    &--fighting { background-color: #C22E28; }
-    &--poison { background-color: #A33EA1; }
-    &--ground { background-color: #E2BF65; }
-    &--flying { background-color: #A98FF3; }
-    &--psychic { background-color: #F95587; }
-    &--bug { background-color: #A6B91A; }
-    &--rock { background-color: #B6A136; }
-    &--ghost { background-color: #735797; }
-    &--dragon { background-color: #6F35FC; }
-    &--dark { background-color: #705746; }
-    &--steel { background-color: #B7B7CE; }
-    &--fairy { background-color: #D685AD; }
-  }
-  
-  // Mobile responsiveness
-  @media (max-width: 480px) {
-    .pokemon-card {
-      &__image-container {
-        height: 140px;
-        
-        img {
-          max-height: 110px;
-        }
-      }
-      
-      &__header {
-        &-name {
-          font-size: 0.9rem;
-        }
-      }
-      
-      &__stats {
-        &-row {
-          font-size: 0.8rem;
-        }
-      }
+    
+    .card-img-top {
+      height: 140px;
     }
   }
+}
+
+// Tablet responsiveness
+@media (max-width: 768px) {
+  .pokemon-card {
+    .card-title {
+      font-size: 1rem;
+    }
+  }
+}

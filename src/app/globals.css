@@ -43,7 +43,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -62,6 +62,7 @@ body {
   
   .controls {
     display: flex;
+    flex-direction: row;
     gap: 1rem;
     
     @media (max-width: 576px) {
@@ -70,7 +71,7 @@ body {
   }
 }
 
-// Type badge colors
+/* // Type badge colors */
 .type-badge {
   display: inline-block;
   padding: 0.25rem 0.5rem;
@@ -82,7 +83,7 @@ body {
   text-shadow: 0 1px 1px rgba(0,0,0,0.3);
 }
 
-// Define colors for each Pokemon type
+/* // Define colors for each Pokemon type */
 .type-normal { background-color: #A8A878; }
 .type-fire { background-color: #F08030; }
 .type-water { background-color: #6890F0; }

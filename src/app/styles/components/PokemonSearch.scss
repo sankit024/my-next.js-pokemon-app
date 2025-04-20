@@ -1,11 +1,8 @@
-// styles/components/PokemonSearch.scss
 
 .pokemon-search {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1.5rem 1.5rem 0;
-    
     &__container {
       display: flex;
       gap: 1rem;
@@ -163,12 +160,25 @@
       }
     }
   }
+
+  .btn-primary {
+    background-color: #1e293b !important;
+    border-color: #1e293b !important;
+    color: #ffffff !important;
   
-  // Mobile responsiveness
+    &:hover,
+    &:focus,
+    &:active,
+    &.active,
+    .show > &.dropdown-toggle {
+      background-color: darken(#888b91, 5%) !important;
+      border-color: darken(#1e293b, 5%) !important;
+      color: #ffffff !important;
+    }
+  }
+  
   @media (max-width: 768px) {
     .pokemon-search {
-      padding: 1rem 1rem 0;
-      
       &__container {
         flex-direction: column;
         gap: 0.5rem;

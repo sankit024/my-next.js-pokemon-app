@@ -9,7 +9,6 @@ const Pagination = () => {
   const { currentPage, totalPages } = useSelector((state: RootState) => state.pokemon);
   const { activeType } = useSelector((state: RootState) => state.types);
   
-  // Only show pagination for 'all' Pokemon view
   if (activeType !== 'all') {
     return null;
   }
@@ -19,9 +18,8 @@ const Pagination = () => {
     dispatch(fetchAllPokemon({ limit: 20, offset: (page - 1) * 20 }));
   };
   
-  // Create pagination items
   const items = [];
-  const maxItems = 5; // Show max 5 page numbers
+  const maxItems = 5; 
   
   let startPage = Math.max(1, currentPage - Math.floor(maxItems / 2));
   const endPage = Math.min(totalPages, startPage + maxItems - 1);
@@ -30,7 +28,7 @@ const Pagination = () => {
     startPage = Math.max(1, endPage - maxItems + 1);
   }
   
-  // Previous button
+  
   items.push(
     <BsPagination.Prev 
       key="prev"
@@ -39,7 +37,6 @@ const Pagination = () => {
     />
   );
   
-  // First page
   if (startPage > 1) {
     items.push(
       <BsPagination.Item 
@@ -56,7 +53,6 @@ const Pagination = () => {
     }
   }
   
-  // Page numbers
   for (let page = startPage; page <= endPage; page++) {
     items.push(
       <BsPagination.Item 
@@ -69,7 +65,6 @@ const Pagination = () => {
     );
   }
   
-  // Last page
   if (endPage < totalPages) {
     if (endPage < totalPages - 1) {
       items.push(<BsPagination.Ellipsis key="ellipsis-2" />);
@@ -86,7 +81,6 @@ const Pagination = () => {
     );
   }
   
-  // Next button
   items.push(
     <BsPagination.Next 
       key="next" 

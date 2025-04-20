@@ -1,12 +1,41 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Pokemon, PokemonListResponse } from '../types';
 import { fetchPokemonList, fetchPokemonByType, searchPokemon } from '../utils/api';
-
+import { notifyError, notifySuccess } from '../utils/notificationServies';
+interface PokemonSprites {
+  front_default: string;
+  back_default: string;
+  front_shiny?: string;
+  back_shiny?: string;
+  other?: {
+    'official-artwork'?: {
+      front_default?: string;
+    };
+  };
+}
+interface PokemonType {
+  slot: number;
+  type: {
+    name: string;
+    url: string;
+  };
+}
+interface Pokemon {
+  id: number;
+  name: string;
+  url: string;
+  sprites: PokemonSprites;
+  types: PokemonType[];
+}
+interface PokemonListResponseWithDetails {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Pokemon[];
+}
 interface PokemonState {
   allPokemon: Pokemon[];
   filteredPokemon: Pokemon[];
   loading: boolean;
-  error: string | null;
   currentPage: number;
   totalPages: number;
   viewMode: 'grid' | 'list';
@@ -17,34 +46,85 @@ const initialState: PokemonState = {
   allPokemon: [],
   filteredPokemon: [],
   loading: false,
-  error: null,
   currentPage: 1,
   totalPages: 0,
   viewMode: 'grid',
   searchQuery: ''
 };
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message: string;
+}
 
-export const fetchAllPokemon = createAsyncThunk(
+export const fetchAllPokemon = createAsyncThunk<
+  PokemonListResponseWithDetails | undefined,
+  { limit: number; offset: number }
+>(
   'pokemon/fetchAll',
-  async (params: { limit: number; offset: number }) => {
-    const response = await fetchPokemonList(params.limit, params.offset);
-    return response;
+  async (params: { limit: number; offset: number }, { rejectWithValue }) => {
+    try {
+      const response = await fetchPokemonList(params.limit, params.offset);
+      return response;
+    } catch (error) {
+      const typedError = error as Error | ApiError;
+      const errorMessage = 'response' in typedError && typedError.response?.data?.message
+        ? typedError.response.data.message
+        : typedError.message || 'Failed to fetch Pokemon. Please try again.';
+      notifyError(errorMessage);
+      return rejectWithValue(errorMessage);
+    }
   }
 );
 
-export const fetchPokemonOfType = createAsyncThunk(
+export const fetchPokemonOfType = createAsyncThunk<
+  Pokemon[] | undefined,
+  string
+>(
   'pokemon/fetchByType',
-  async (type: string) => {
-    const pokemon = await fetchPokemonByType(type);
-    return pokemon;
+  async (type: string, { rejectWithValue }) => {
+    try {
+      const pokemon = await fetchPokemonByType(type);
+      if (pokemon && pokemon.length > 0) {
+        notifySuccess(`Loaded ${pokemon.length} ${type} type Pokemon`);
+      }
+      return pokemon;
+    } catch (error) {
+      const typedError = error as Error | ApiError;
+      const errorMessage = 'response' in typedError && typedError.response?.data?.message
+        ? typedError.response.data.message
+        : typedError.message || `Failed to fetch ${type} Pokemon. Please try again.`;
+      notifyError(errorMessage);
+      return rejectWithValue(errorMessage);
+    }
   }
 );
 
-export const searchPokemonByName = createAsyncThunk(
+export const searchPokemonByName = createAsyncThunk<
+  Pokemon[] | undefined,
+  string
+>(
   'pokemon/search',
-  async (query: string) => {
-    const pokemon = await searchPokemon(query);
-    return pokemon;
+  async (query: string, { rejectWithValue }) => {
+    try {
+      const pokemon = await searchPokemon(query);
+      if (pokemon && pokemon.length > 0) {
+        notifySuccess(`Found ${pokemon.length} Pokemon matching "${query}"`);
+      } else {
+        notifyError(`No Pokemon found matching "${query}"`);
+      }
+      return pokemon;
+    } catch (error) {
+      const typedError = error as Error | ApiError;
+      const errorMessage = 'response' in typedError && typedError.response?.data?.message
+        ? typedError.response.data.message
+        : typedError.message || `Failed to search for "${query}". Please try again.`;
+      notifyError(errorMessage);
+      return rejectWithValue(errorMessage);
+    }
   }
 );
 
@@ -66,41 +146,37 @@ const pokemonSlice = createSlice({
     builder
       .addCase(fetchAllPokemon.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
-      .addCase(fetchAllPokemon.fulfilled, (state, action: PayloadAction<PokemonListResponse>) => {
+      .addCase(fetchAllPokemon.fulfilled, (state, action: PayloadAction<PokemonListResponseWithDetails | undefined>) => {
         state.loading = false;
-        state.allPokemon = action.payload.results;
-        state.filteredPokemon = action.payload.results;
-        state.totalPages = Math.ceil(action.payload.count / 20);
+        if (action.payload) {
+          state.allPokemon = action.payload.results;
+          state.filteredPokemon = action.payload.results;
+          state.totalPages = Math.ceil(action.payload.count / 20);
+        }
       })
-      .addCase(fetchAllPokemon.rejected, (state, action) => {
+      .addCase(fetchAllPokemon.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch Pokemon';
       })
       .addCase(fetchPokemonOfType.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
-      .addCase(fetchPokemonOfType.fulfilled, (state, action) => {
+      .addCase(fetchPokemonOfType.fulfilled, (state, action: PayloadAction<Pokemon[] | undefined>) => {
         state.loading = false;
         state.filteredPokemon = action.payload || [];
       })
-      .addCase(fetchPokemonOfType.rejected, (state, action) => {
+      .addCase(fetchPokemonOfType.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch Pokemon by type';
       })
       .addCase(searchPokemonByName.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
-      .addCase(searchPokemonByName.fulfilled, (state, action) => {
+      .addCase(searchPokemonByName.fulfilled, (state, action: PayloadAction<Pokemon[] | undefined>) => {
         state.loading = false;
         state.filteredPokemon = action.payload || [];
       })
-      .addCase(searchPokemonByName.rejected, (state, action) => {
+      .addCase(searchPokemonByName.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to search Pokemon';
       });
   }
 });
